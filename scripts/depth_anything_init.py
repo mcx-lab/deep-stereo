@@ -57,7 +57,7 @@ class DepthAnything(object):
 
         while not rospy.is_shutdown():
             
-            if self.image is not None and self.depth is not None:
+            if self.depth is not None:
                 self.pub.publish(self.br.cv2_to_imgmsg(self.depth, encoding="32FC1"))
             
             rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
