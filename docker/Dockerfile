@@ -58,5 +58,6 @@ RUN git clone --recursive https://github.com/DepthAnything/Depth-Anything-V2 /de
 WORKDIR /depth_anything_ws
 RUN pip3 install -r requirements.txt
 
-RUN git clone https://github.com/mcx-lab/deep-stereo /catkin_ws/src/deep_stereo
+RUN git clone https://github.com/mcx-lab/deep-stereo /deep_stereo_ws/src
 WORKDIR /catkin_ws
+RUN catkin_make
