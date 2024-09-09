@@ -1,8 +1,8 @@
 depth_anything_config:
   model:
     model_type: "metric"
-    model_size: "vit_l"
-    model_path: "models/vit_l.pth"
+    model_size: "vitl"
+    model_path: "/scratchdata/depth_anything_v2_metric_hypersim_vitl.pth"
   camera:
     camera_type: "gemini_2xl"
     min_reading: 0.0

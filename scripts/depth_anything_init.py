@@ -6,27 +6,65 @@ script_dir = os.path.dirname( __file__ )
 sys.path.append( script_dir )
 
 import rospy
+import numpy as np
 import data_conversion
 import depth_anything_interface
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
-config = rospy.get_param('/depth_anything_config')
-DEVICE = "cuda"
-MODEL_PATH = config["model"]["model_path"]
-model_type = config["model"]["model_type"]
-encoder = config["model"]["model_size"]
-max_depth = 20.0
+class DepthAnything(object):
+    def __init__(self):
+        
+        self.config = rospy.get_param('/depth_anything_config')
+        self.device = "cuda"
+        self.model_path = self.config["model"]["model_path"]
+        self.model_type = self.config["model"]["model_type"]
+        self.encoder = self.config["model"]["model_size"]
+        self.max_depth = 20.0
 
-camera_topic = config["camera"]["rgb_topic"]
+        self.camera_topic = self.config["camera"]["rgb_topic"]
 
-model = depth_anything_interface.get_model(DEVICE, MODEL_PATH, model_type, encoder, max_depth)
+        self.model = depth_anything_interface.get_model(self.device, self.model_path, self.model_type, self.encoder, self.max_depth)
+        
+        # Params
+        self.image = None
+        self.depth = None
+        self.br = CvBridge()
+        # Node cycle rate (in Hz).
+        self.loop_rate = rospy.Rate(10)
 
-def callback(data):
-    print(data)
+        # Publishers
+        self.pub = rospy.Publisher('depth_anything_est_depth', Image,queue_size=10)
 
-def get_est_depth():
-    rospy.init_node('depth_anything', anonymous=True)
-    rospy.Subscriber(camera_topic, Image, callback)
-    rospy.spin()
+        # Subscribers
+        rospy.Subscriber(self.camera_topic,Image,self.callback)
 
+    def callback(self, msg):
+        self.image = data_conversion.topic_to_image(msg)
+        self.depth = self.model.infer_image(self.image)
+
+    def start(self):
+        rospy.loginfo(' ______   _______  _______  _______         _______ _________ _______  _______  _______  _______')
+        rospy.loginfo('(  __  \ (  ____ \(  ____ \(  ____ )       (  ____ \\__   __/(  ____ \(  ____ )(  ____ \(  ___  )')
+        rospy.loginfo('| (  \  )| (    \/| (    \/| (    )|       | (    \/   ) (   | (    \/| (    )|| (    \/| (   ) |')
+        rospy.loginfo('| |   ) || (__    | (__    | (____)| _____ | (_____    | |   | (__    | (____)|| (__    | |   | |')
+        rospy.loginfo('| |   | ||  __)   |  __)   |  _____)(_____)(_____  )   | |   |  __)   |     __)|  __)   | |   | |')
+        rospy.loginfo('| |   ) || (      | (      | (                   ) |   | |   | (      | (\ (   | (      | |   | |')
+        rospy.loginfo('| (__/  )| (____/\| (____/\| )             /\____) |   | |   | (____/\| ) \ \__| (____/\| (___) |')
+        rospy.loginfo('(______/ (_______/(_______/|/              \_______)   )_(   (_______/|/   \__/(_______/(_______)')
+                                                                                                
+        self.time = rospy.get_rostime().to_sec()
+
+        while not rospy.is_shutdown():
+            
+            if self.image is not None and self.depth is not None:
+                self.pub.publish(self.br.cv2_to_imgmsg(self.depth, encoding="32FC1"))
+            
+            rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
+            self.time = rospy.get_rostime().to_sec()
+            self.loop_rate.sleep()
+                        
 if __name__ == '__main__':
-    get_est_depth()
+    rospy.init_node("depth_anything", anonymous=True)
+    new_node = DepthAnything()
+    new_node.start()
