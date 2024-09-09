@@ -44,24 +44,16 @@ class DepthAnything(object):
         self.depth = self.model.infer_image(self.image)
 
     def start(self):
-        rospy.loginfo(' ______   _______  _______  _______         _______ _________ _______  _______  _______  _______')
-        rospy.loginfo('(  __  \ (  ____ \(  ____ \(  ____ )       (  ____ \\__   __/(  ____ \(  ____ )(  ____ \(  ___  )')
-        rospy.loginfo('| (  \  )| (    \/| (    \/| (    )|       | (    \/   ) (   | (    \/| (    )|| (    \/| (   ) |')
-        rospy.loginfo('| |   ) || (__    | (__    | (____)| _____ | (_____    | |   | (__    | (____)|| (__    | |   | |')
-        rospy.loginfo('| |   | ||  __)   |  __)   |  _____)(_____)(_____  )   | |   |  __)   |     __)|  __)   | |   | |')
-        rospy.loginfo('| |   ) || (      | (      | (                   ) |   | |   | (      | (\ (   | (      | |   | |')
-        rospy.loginfo('| (__/  )| (____/\| (____/\| )             /\____) |   | |   | (____/\| ) \ \__| (____/\| (___) |')
-        rospy.loginfo('(______/ (_______/(_______/|/              \_______)   )_(   (_______/|/   \__/(_______/(_______)')
                                                                                                 
-        self.time = rospy.get_rostime().to_sec()
+        #self.time = rospy.get_rostime().to_sec()
 
         while not rospy.is_shutdown():
             
             if self.depth is not None:
                 self.pub.publish(self.br.cv2_to_imgmsg(self.depth, encoding="32FC1"))
             
-            rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
-            self.time = rospy.get_rostime().to_sec()
+            #rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
+            #self.time = rospy.get_rostime().to_sec()
             self.loop_rate.sleep()
                         
 if __name__ == '__main__':

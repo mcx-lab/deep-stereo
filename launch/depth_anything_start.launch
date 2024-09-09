@@ -1,5 +1,6 @@
 <launch>
   <rosparam command="load" file="$(find deep_stereo)/config/default.yaml" />
 
-  <node name="depth_anything_init" pkg="deep_stereo" type="depth_anything_init.py" output="screen"/>
+  <node name="depth_anything_init" pkg="deep_stereo" type="depth_anything_init.py"/>
+  <node name="depth_anything_scale" pkg="deep_stereo" type="estimate.py"/>
 </launch>
