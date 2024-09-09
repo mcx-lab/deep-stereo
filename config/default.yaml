@@ -1,0 +1,13 @@
+depth_anything_config:
+  model:
+    model_type: "metric"
+    model_size: "vit_l"
+    model_path: "models/vit_l.pth"
+  camera:
+    camera_type: "gemini_2xl"
+    min_reading: 0.0
+    max_reading: 65.535
+    min_reliable_reading: 0.3
+    max_reliable_reading: 7.0
+    rgb_topic: "/camera/color/image_raw"
+    depth_topic: "/camera/depth/image_raw"

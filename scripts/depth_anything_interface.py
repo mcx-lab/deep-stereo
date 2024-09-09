@@ -1,3 +1,5 @@
+import sys
+
 import cv2
 import torch
 import numpy as np
@@ -8,7 +10,6 @@ from sklearn.metrics import r2_score
 
 def get_model(DEVICE, MODEL_PATH, model_type = "base", encoder='vitl', max_depth=20.0):
     if model_type == "base":
-        import sys
         sys.path.append("/Depth-Anything-V2")
         from depth_anything_v2.dpt import DepthAnythingV2
 
@@ -21,7 +22,6 @@ def get_model(DEVICE, MODEL_PATH, model_type = "base", encoder='vitl', max_depth
 
         model = DepthAnythingV2(**model_configs[encoder])
     elif model_type == "metric":
-        import sys
         sys.path.append("/Depth-Anything-V2/metric_depth")
 
         from depth_anything_v2.dpt import DepthAnythingV2

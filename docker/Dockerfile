@@ -54,8 +54,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
-RUN git clone --recursive https://github.com/DepthAnything/Depth-Anything-V2 /depth_anything_ws
-WORKDIR /depth_anything_ws
+RUN git clone --recursive https://github.com/DepthAnything/Depth-Anything-V2 /Depth-Anything-V2
+WORKDIR /Depth-Anything-V2
 RUN pip3 install -r requirements.txt
 
 RUN git clone https://github.com/mcx-lab/deep-stereo /deep_stereo_ws/src
