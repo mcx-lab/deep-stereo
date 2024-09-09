@@ -1,0 +1,3 @@
+<launch>
+  <node name="talker_node" pkg="depth_anything" type="talker" output="screen"/>
+</launch>
