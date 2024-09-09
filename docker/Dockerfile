@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     python3-rosinstall-generator \
     python3-wstool \
     build-essential \
+    python3-catkin-tools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
@@ -53,12 +54,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
-RUN git clone --recursive https://github.com/DepthAnything/Depth-Anything-V2 /deepth_anything_ws
+RUN git clone --recursive https://github.com/DepthAnything/Depth-Anything-V2 /depth_anything_ws
 WORKDIR /depth_anything_ws
 RUN pip3 install -r requirements.txt
 
 RUN git clone https://github.com/mcx-lab/deep-stereo /catkin_ws/src/deep_stereo
 WORKDIR /catkin_ws
-RUN cakin init
-RUN catkin build
-
