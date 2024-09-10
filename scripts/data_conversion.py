@@ -5,8 +5,8 @@ def topic_to_image(msg):
     img = img_raw.reshape((msg.height, msg.width, 3))
     return img
 
-def topic_to_depth(msg, CAMERA_DATA):
+def topic_to_depth(msg, config):
     depth_raw = np.frombuffer(msg.data, dtype=np.uint16)
     depth = depth_raw.reshape((msg.height, msg.width))
-    depth = depth / (2**16-1) * (CAMERA_DATA["max_range"]- CAMERA_DATA["min_range"]) + CAMERA_DATA["min_range"]
+    depth = depth / (2**16-1) * (config["camera"]["max_range"]- config["camera"]["min_range"]) + config["camera"]["min_range"]
     return depth

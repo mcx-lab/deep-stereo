@@ -31,7 +31,7 @@ class DepthAnything(object):
         self.depth = None
         self.br = CvBridge()
         # Node cycle rate (in Hz).
-        self.loop_rate = rospy.Rate(30)
+        self.loop_rate = rospy.Rate(10)
 
         # Publishers
         self.pub = rospy.Publisher('depth_anything_est_depth', Image,queue_size=1)

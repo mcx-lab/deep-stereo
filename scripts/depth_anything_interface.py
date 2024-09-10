@@ -44,13 +44,13 @@ def get_model(DEVICE, MODEL_PATH, model_type = "base", encoder='vitl', max_depth
 def estimated_depth_model(x,a):
     return a * x 
 
-def get_pred_depth(depth, est_depth, CAMERA_DATA, fit_model, maxfev=1000, verbose=False):
+def get_pred_depth(depth, est_depth, config, fit_model, maxfev=1000, verbose=False):
     depth_flatten = depth.flatten()
     est_depth_flatten = est_depth.flatten()
-    est_depth_flatten = est_depth_flatten[depth_flatten>=CAMERA_DATA["min_acc_range"]]
-    depth_flatten = depth_flatten[depth_flatten>=CAMERA_DATA["min_acc_range"]]
-    est_depth_flatten = est_depth_flatten[depth_flatten<=CAMERA_DATA["max_acc_range"]]
-    depth_flatten = depth_flatten[depth_flatten<=CAMERA_DATA["max_acc_range"]]
+    est_depth_flatten = est_depth_flatten[depth_flatten>=config["camera"]["min_reliable_range"]]
+    depth_flatten = depth_flatten[depth_flatten>=config["camera"]["min_reliable_range"]]
+    est_depth_flatten = est_depth_flatten[depth_flatten<=config["camera"]["max_reliable_range"]]
+    depth_flatten = depth_flatten[depth_flatten<=config["camera"]["max_reliable_range"]]
 
     popt, _ = curve_fit(fit_model, est_depth_flatten, depth_flatten, maxfev=maxfev)
 
