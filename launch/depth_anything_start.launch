@@ -1,5 +1,7 @@
 <launch>
   <rosparam command="load" file="$(find deep_stereo)/config/default.yaml" />
 
+  <!-- Hack Way to declare a tf transform for visualisation-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher_node" args="0 0 0 0 0 0 /depth_anything_optical_frame /map" />
   <node name="depth_anything_init" pkg="deep_stereo" type="depth_anything.py" output="screen"/>
 </launch>

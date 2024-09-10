@@ -10,6 +10,7 @@ import numpy as np
 import data_conversion
 import message_filters
 import depth_anything_interface
+from std_msgs.msg import Header
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
@@ -32,20 +33,26 @@ class DepthAnything(object):
         self.image = None
         self.depth = None
         self.br = CvBridge()
+        self.header = Header()
+        self.header.frame_id = "depth_anything_optical_frame"
 
         # Publishers
-        self.depth_pub = rospy.Publisher('depth_anything_est_depth', Image, queue_size=1)
+        self.depth_float32_pub = rospy.Publisher('depth_anything_est_depth_float32', Image, queue_size=1)
 
     def callback(self,img_sub_msg, depth_sub_msg):
 
         sta = rospy.get_rostime()
+
+        self.header.stamp = rospy.Time.now()
 
         self.image = data_conversion.topic_to_image(img_sub_msg)
         gt_depth = data_conversion.topic_to_depth(depth_sub_msg, self.config)
         est_depth = self.model.infer_image(self.image)
 
         self.depth, _ = depth_anything_interface.get_pred_depth(gt_depth, est_depth, self.config, depth_anything_interface.estimated_depth_model, verbose=False)
-        self.depth_pub.publish(self.br.cv2_to_imgmsg(self.depth, "32FC1"))
+        msg = self.br.cv2_to_imgmsg(self.depth, "32FC1")
+        msg.header = self.header
+        self.depth_float32_pub.publish(msg)
 
         rospy.loginfo("Time Taken: {}".format((rospy.get_rostime()-sta).to_sec()))
 
