@@ -31,10 +31,10 @@ class DepthAnything(object):
         self.depth = None
         self.br = CvBridge()
         # Node cycle rate (in Hz).
-        self.loop_rate = rospy.Rate(10)
+        self.loop_rate = rospy.Rate(30)
 
         # Publishers
-        self.pub = rospy.Publisher('depth_anything_est_depth', Image,queue_size=10)
+        self.pub = rospy.Publisher('depth_anything_est_depth', Image,queue_size=1)
 
         # Subscribers
         rospy.Subscriber(self.camera_topic,Image,self.callback)
@@ -45,15 +45,15 @@ class DepthAnything(object):
 
     def start(self):
                                                                                                 
-        #self.time = rospy.get_rostime().to_sec()
+        self.time = rospy.get_rostime().to_sec()
 
         while not rospy.is_shutdown():
             
             if self.depth is not None:
-                self.pub.publish(self.br.cv2_to_imgmsg(self.depth, encoding="32FC1"))
-            
-            #rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
-            #self.time = rospy.get_rostime().to_sec()
+                self.pub.publish(self.br.cv2_to_imgmsg(self.depth))
+                self.depth = None
+                rospy.loginfo("Time Taken: {}".format(rospy.get_rostime().to_sec()-self.time))
+                self.time = rospy.get_rostime().to_sec()
             self.loop_rate.sleep()
                         
 if __name__ == '__main__':
