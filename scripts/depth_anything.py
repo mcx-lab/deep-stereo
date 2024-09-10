@@ -37,6 +37,7 @@ class DepthAnything(object):
         self.header.frame_id = "depth_anything_optical_frame"
 
         # Publishers
+        self.img_pub = rospy.Publisher('depth_anything_img', Image, queue_size=1)
         self.depth_float32_pub = rospy.Publisher('depth_anything_est_depth_float32', Image, queue_size=1)
 
     def callback(self,img_sub_msg, depth_sub_msg):
@@ -53,6 +54,7 @@ class DepthAnything(object):
         msg = self.br.cv2_to_imgmsg(self.depth, "32FC1")
         msg.header = self.header
         self.depth_float32_pub.publish(msg)
+        self.img_pub.publish(img_sub_msg)
 
         rospy.loginfo("Time Taken: {}".format((rospy.get_rostime()-sta).to_sec()))
 
