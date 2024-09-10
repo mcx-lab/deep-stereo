@@ -59,5 +59,6 @@ WORKDIR /Depth-Anything-V2
 RUN pip3 install -r requirements.txt
 
 RUN git clone https://github.com/mcx-lab/deep-stereo /deep_stereo_ws/src
-WORKDIR /deep_stereo_ws && catkin_make
+WORKDIR /deep_stereo_ws
+RUN catkin_make
 RUN echo "source /deep_stereo_ws/devel/setup.bash" >> ~/.bashrc
