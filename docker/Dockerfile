@@ -57,4 +57,6 @@ RUN pip3 install -r requirements.txt
 
 RUN git clone https://github.com/mcx-lab/deep-stereo /deep_stereo_ws/src
 WORKDIR /deep_stereo_ws
-CMD catkin_make
+RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash && \
+    catkin_make'
+RUN echo "source /deep_stereo_ws/devel/setup.bash" >> ~/.bashrc
