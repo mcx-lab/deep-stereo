@@ -7,7 +7,7 @@ depth_anything_config:
     camera_type: "gemini_2xl"
     min_range: 0.0
     max_range: 65.535
-    min_reliable_range: 0.3
-    max_reliable_range: 7.0
+    min_reliable_range: 0.4
+    max_reliable_range: 10.0
     rgb_topic: "/camera/color/image_raw"
     depth_topic: "/camera/depth/image_raw"
