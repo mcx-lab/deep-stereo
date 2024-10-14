@@ -106,9 +106,12 @@ def pcd_matching_tf(ori, new, epsilon, trials, verbose = False):
 
     return tf
 
-def ply_from_1x4_coord(coord, filename, color = None):
+def ply_from_1x4_coord(coord, filename, color = None, voxel_size = 0.05):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(coord[:,:3]/coord[:,3][:,None])
     if color is not None:
         pcd.colors = o3d.utility.Vector3dVector(color)
-    o3d.io.write_point_cloud(filename, pcd)
+    voxel_grid = pcd.voxel_down_sample(voxel_size=0.05)
+
+    #o3d.io.write_point_cloud(filename, pcd)
+    o3d.io.write_point_cloud(filename, voxel_grid)
