@@ -48,7 +48,7 @@ def pcd_transform(ori, new, epsilon, trials, verbose = False):
 
     return best_rotation
 
-def pcd_matching_tf(coord1, coord2, epsilon, trials, ransac_sample=3, verbose = False):
+def pcd_matching_tf(coord1, coord2, epsilon, trials, ransac_sample=4, verbose = False):
     best_inliers = 0
     best_tf = np.eye(4)
 
@@ -70,26 +70,17 @@ def pcd_matching_tf(coord1, coord2, epsilon, trials, ransac_sample=3, verbose = 
             U, D, V_T = np.linalg.svd(H)
         except:
             continue
-        S = np.eye(3)
-        det = np.linalg.det(U) * np.linalg.det(V_T.T)
         
-        # Check for reflection case
-        if not np.isclose(det,1.):
-            S[3-1,3-1] = -1
-
-        R = U @ S @ V_T
-        R = U @ V_T
-
+        R = V_T.T @ U.T
         sample2 = sample2 @ R.T
 
         scale = np.einsum('ij,ij->', sample1, sample2) / np.einsum('ij,ij->', sample2, sample2)
         #print(np.einsum('ij,ij->', sample1, sample2), np.einsum('ij,ij->', sample2, sample2))
-
+        
         if scale < 1e-5:
             continue
             
-        test_coord2 = (coord2 - sample2_mean) * scale
-        test_coord2 = test_coord2 @ R.T + sample1_mean
+        test_coord2 = (coord2 - sample2_mean) @ R.T * scale + sample1_mean
 
         error = np.linalg.norm(test_coord2 - coord1, axis=1)
 
