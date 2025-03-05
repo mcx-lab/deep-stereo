@@ -6,10 +6,10 @@ import numpy as np
 import cv2
 from cv_bridge import CvBridge
 
-DESTINATION_DIR = "/scratchdata/processed/desk"
+DESTINATION_DIR = "/scratchdata/processed/stair"
 
 # Open the rosbag file
-bag = rosbag.Bag('/scratchdata/desk.bag', 'r')
+bag = rosbag.Bag('/scratchdata/stair.bag', 'r')
 
 # Camera Info
 camera_info = {}
@@ -42,7 +42,7 @@ for i in range(len(rgb)):
     cv2.imwrite(os.path.join(DESTINATION_DIR, f'rgb/{i}.png'), rgb[i][0])
 
 for i in range(len(depth)):
-    cv2.imwrite(os.path.join(DESTINATION_DIR, f'depth/{i}.png'), depth_img)
+    cv2.imwrite(os.path.join(DESTINATION_DIR, f'depth/{i}.png'), depth[i][0])
 
 # Close the ROS bag
 bag.close()
