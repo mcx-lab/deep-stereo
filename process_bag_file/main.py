@@ -6,10 +6,10 @@ import numpy as np
 import cv2
 from cv_bridge import CvBridge
 
-DESTINATION_DIR = "/scratchdata/processed/stair"
+DESTINATION_DIR = "/scratchdata/processed/corridor"
 
 # Open the rosbag file
-bag = rosbag.Bag('/scratchdata/stair.bag', 'r')
+bag = rosbag.Bag('/scratchdata/corridor.bag', 'r')
 
 # Camera Info
 camera_info = {}
@@ -33,7 +33,7 @@ for topic, msg, t in bag.read_messages(topics=['/camera/color/image_raw']):
 
 for topic, msg, t in bag.read_messages(topics=['/camera/depth/image_raw']):
     depth_img = np.frombuffer(msg.data, dtype=np.uint16).reshape(msg.height, msg.width)
-    depth.append((msg, t))
+    depth.append((depth_img, t))
 
 print(len(rgb))
 print(len(depth))
